@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/google/go-querystring/query"
+	"github.com/pborman/uuid"
 )
 
 const (
@@ -93,7 +94,8 @@ func (s *Service) NewRequest(ctx context.Context, method, path string, body inte
 		}
 		req.URL.RawQuery += query
 	}
-	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Accept", "application/vnd.heroku+json; version=3")
+	req.Header.Set("Request-Id", uuid.New())
 	req.Header.Set("User-Agent", DefaultUserAgent)
 	if ctype != "" {
 		req.Header.Set("Content-Type", ctype)
@@ -115,6 +117,9 @@ func (s *Service) Do(ctx context.Context, v interface{}, method, path string, bo
 		return err
 	}
 	defer resp.Body.Close()
+	if err = checkResponse(resp); err != nil {
+		return err
+	}
 	switch t := v.(type) {
 	case nil:
 	case io.Writer:
