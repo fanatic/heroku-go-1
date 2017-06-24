@@ -70,7 +70,9 @@ func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 	req.Header.Set("Accept", "application/vnd.heroku+json; version=3")
 	req.Header.Set("Request-Id", uuid.New())
-	req.SetBasicAuth(t.Username, t.Password)
+	if t.Username != "" || t.Password != "" {
+		req.SetBasicAuth(t.Username, t.Password)
+	}
 	for k, v := range t.AdditionalHeaders {
 		req.Header[k] = v
 	}
