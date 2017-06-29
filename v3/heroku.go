@@ -3073,6 +3073,7 @@ type Release struct {
 		ID    string `json:"id" url:"id,key"`       // unique identifier of an account
 	} `json:"user" url:"user,key"` // user that created the release
 	Version int `json:"version" url:"version,key"` // unique version assigned to the release
+	OutputStreamURL *string `json:"output_stream_url"`
 }
 
 // Info for existing release.
